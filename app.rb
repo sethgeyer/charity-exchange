@@ -10,13 +10,11 @@ class App < Sinatra::Application
 
   def initialize
     super
-    @users = Users.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-    @scores = Scores.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-
-    @database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+    #@users = Users.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
   end
 
   get "/" do
+  erb :home
   end
 
 end
