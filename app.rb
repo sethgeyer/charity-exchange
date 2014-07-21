@@ -19,22 +19,39 @@ class App < Sinatra::Application
   end
 
   #NEW
-  get "/new_user" do
+  get "/users/new" do
     erb :new_user
   end
 
   #CREATE
   post "/users" do
-    email = params[:email]
-    password = params[:password]
-    profile_picture = params[:profile_picture]
-    @users.create_new_user_in_dbase(email, password, profile_picture)
-    current_user = @users.find_by_email(email)
-    session[:user_id] = current_user["id"]
-    session[:email] = current_user["email"]
+    @users.create_new_user_in_dbase(params[:email], params[:password], params[:profile_picture])
+    current_user = @users.find_user(params[:email], params[:password])
+    set_the_session(current_user)
     flash[:notice] = "Thanks for registering #{session[:email]}. You are now logged in."
     redirect "/"
   end
 
+  post "/login" do
+    current_user = @users.find_user(params[:email], params[:password])
+    if current_user != nil
+      set_the_session(current_user)
+      flash[:notice] = "Welcome #{session[:email]}"
+    else
+      flash[:notice] = "The credentials you entered are incorrect.  Please try again."
+    end
+    redirect "/"
+  end
+
+  post "/logout" do
+    session.delete(:user_id)
+    session.delete(:email)
+    redirect "/"
+  end
+
+  def set_the_session(current_user)
+    session[:user_id] = current_user["id"]
+    session[:email] = current_user["email"]
+  end
 
 end

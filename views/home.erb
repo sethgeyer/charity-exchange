@@ -1,11 +1,29 @@
 <div>
 
-<a href = "/new_user">Sign Up</a>
-<form>
-  <button>"Login"</button>
-</form>
+  <%if !session[:user_id]%>
+    <a href = "/users/new">Sign Up</a>
+
+    <form method="POST" action="/login">
+      <label for="email">Email:</label>
+      <br/>
+      <input type="email" id="email" name="email"/>
+      <br/>
+      <label for="password">Password:</label>
+      <br/>
+      <input type="password" id="password" name="password"/>
+      <br/>
+      <button>Login</button>
+    </form>
+
+  <%else%>
+    <form method="POST" action="/logout" >
+      <button>Logout</button>
+    </form>
+    <a href="/users/edit/<%=session[:user_id]%>">Edit Profile</a>
+
+  <%end%>
+  <h1>Charity Exchange</h1>
 
 
-<h1>Charity Exchange)</h1>
 
 </div>

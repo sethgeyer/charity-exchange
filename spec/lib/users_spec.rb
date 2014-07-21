@@ -13,10 +13,10 @@ describe Users do
     end
   end
 
-  describe "find_by_email" do
-    it "returns the user hash associated with the unique email name passed" do
+  describe "find_user" do
+    it "returns the user hash associated with the unique email and address passed" do
       users.create_new_user_in_dbase("sgeyer@gmail.com", "fudge", "http://google.com")
-      person = users.find_by_email("sgeyer@gmail.com")
+      person = users.find_user("sgeyer@gmail.com", "fudge")
       expect(person["email"]).to eq("sgeyer@gmail.com")
     end
   end
