@@ -16,9 +16,7 @@ feature "visitor visits homepage" do
   scenario "registered visitor completes login form correctly" do
     fill_in_registration_form("Seth")
     click_on "Logout"
-    fill_in "Email", with: "Seth"
-    fill_in "Password", with: "seth"
-    click_on "Login"
+    login_a_registered_user("Seth")
     expect(page).to have_content("Welcome Seth")
     expect(page).to have_button("Logout")
     expect(page).not_to have_button("Login")
@@ -40,7 +38,9 @@ end
 
 feature "editing user profile" do
   scenario "registered user updates their user profile" do
-    visit "/"
+    fill_in_registration_form("Seth")
+    click_on "Logout"
+    login_a_registered_user("Seth")
     click_on "Edit Profile"
     fill_in "Password", with: "sethy"
     fill_in "Profile Picture", with: "www.goggle.com"

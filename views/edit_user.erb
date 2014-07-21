@@ -1,0 +1,18 @@
+<h1>Update Your Profile</h1>
+
+<form method="POST" action="/users/<%=session[:email]%>">
+
+  <label for="email">Email:</label>
+  <br/>
+  <input type="email" id="email" readonly name="email" value="<%=current_user["email"]%>"/>
+  <br/>
+  <label for="password">Password:</label>
+  <br/>
+  <input type="password" id="password" name="password" value="<%=current_user["password"]%>"/>
+  <br/>
+  <label for="profile_picture">Profile Picture:</label>
+  <br/>
+  <input id="profile_picture" name="profile_picture" value="<%=current_user["profile_picture"]%>"/>
+  <br/>
+  <button>Submit</button>
+</form>

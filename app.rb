@@ -32,6 +32,19 @@ class App < Sinatra::Application
     redirect "/"
   end
 
+  get "/users/edit" do
+    current_user = @users.find_user_by_id(session[:user_id])
+    erb :edit_user, locals: {current_user: current_user}
+  end
+
+  post "/users/:id" do
+    @users.update_user_info(params[:id].to_i, params[:password], params[:profile_picture])
+    flash[:notice] = "Your changes have been saved"
+    redirect "/"
+  end
+
+
+
   post "/login" do
     current_user = @users.find_user(params[:email], params[:password])
     if current_user != nil

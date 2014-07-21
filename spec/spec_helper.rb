@@ -26,3 +26,11 @@ def fill_in_registration_form(name)
   fill_in "Profile Picture", with: "http://google.com"
   click_on "Submit"
 end
+
+
+def login_a_registered_user(name)
+  fill_in "Email", with: name
+  fill_in "Password", with: name.downcase
+  click_on "Login"
+
+end
