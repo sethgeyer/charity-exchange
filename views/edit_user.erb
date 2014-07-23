@@ -1,7 +1,7 @@
 <h1>Update Your Profile</h1>
 
 <form method="POST" action="/users/<%=session[:email]%>">
-
+  <input type="hidden" name="_method" value="PATCH"/>
   <label for="email">Email:</label>
   <br/>
   <input type="email" id="email" readonly name="email" value="<%=current_user["email"]%>"/>

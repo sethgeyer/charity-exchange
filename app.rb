@@ -1,6 +1,7 @@
 require "sinatra"
 require "active_record"
 require_relative "lib/users"
+require_relative "lib/charities"
 
 require "rack-flash"
 require "gschool_database_connection"
@@ -12,39 +13,42 @@ class App < Sinatra::Application
   def initialize
     super
     @users = Users.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
+    @charities = Charities.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
   end
 
   get "/" do
   erb :home
   end
 
-  #NEW
-  get "/users/new" do
-    erb :new_user
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  #NEW - CHARITY
+  get "/charities/new" do
+    erb :new_charity
   end
 
-  #CREATE
-  post "/users" do
-    @users.create_new_user_in_dbase(params[:email], params[:password], params[:profile_picture])
-    current_user = @users.find_user(params[:email], params[:password])
-    set_the_session(current_user)
-    flash[:notice] = "Thanks for registering #{session[:email]}. You are now logged in."
+  #CREATE - CHARITY
+  post "/charities" do
+    @charities.add_to_dbase(params[:name], params[:tax_id], params[:poc], params[:poc_email], params[:status])
+    flash[:notice] = "Thanks for applying"
     redirect "/"
   end
 
-  get "/users/edit" do
-    current_user = @users.find_user_by_id(session[:user_id])
-    erb :edit_user, locals: {current_user: current_user}
-  end
-
-  post "/users/:id" do
-    @users.update_user_info(params[:id].to_i, params[:password], params[:profile_picture])
-    flash[:notice] = "Your changes have been saved"
-    redirect "/"
+  #INDEX - CHARITY
+  get "/charities" do
+    charities = @charities.find_all
+    erb :index_charity, locals: {charities: charities}
   end
 
 
 
+
+
+
+
+
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  #LOGIN
   post "/login" do
     current_user = @users.find_user(params[:email], params[:password])
     if current_user != nil
@@ -56,11 +60,44 @@ class App < Sinatra::Application
     redirect "/"
   end
 
+  #LOGOUT
   post "/logout" do
     session.delete(:user_id)
     session.delete(:email)
     redirect "/"
   end
+
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  #NEW - USER
+  get "/users/new" do
+    erb :new_user
+  end
+
+  #CREATE - USER
+  post "/users" do
+    @users.create_new_user_in_dbase(params[:email], params[:password], params[:profile_picture])
+    current_user = @users.find_user(params[:email], params[:password])
+    set_the_session(current_user)
+    flash[:notice] = "Thanks for registering #{session[:email]}. You are now logged in."
+    redirect "/"
+  end
+
+  #EDIT - USER
+  get "/users/edit" do
+    current_user = @users.find_user_by_id(session[:user_id])
+    erb :edit_user, locals: {current_user: current_user}
+  end
+
+  #UPDATE - USER
+  patch "/users/:id" do
+    @users.update_user_info(params[:id].to_i, params[:password], params[:profile_picture])
+    flash[:notice] = "Your changes have been saved"
+    redirect "/"
+  end
+
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
   def set_the_session(current_user)
     session[:user_id] = current_user["id"]
