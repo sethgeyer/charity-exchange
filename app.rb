@@ -31,7 +31,7 @@ class App < Sinatra::Application
   post "/charities" do
     @charities.add_to_dbase(params[:name], params[:tax_id], params[:poc], params[:poc_email], params[:status])
     flash[:notice] = "Thanks for applying"
-    redirect "/"
+    redirect "/charities"
   end
 
   #INDEX - CHARITY

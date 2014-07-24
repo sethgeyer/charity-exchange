@@ -6,11 +6,14 @@ feature "visitor visits homepage" do
     expect(page).to have_button("Login")
     expect(page).to have_link("Sign Up")
     expect(page).not_to have_button("Logout")
+    click_on "charities"
+    expect(page).to have_content("Charities")
   end
 
   scenario "visitor wishes to register" do
     click_on "Sign Up"
     expect(page).to have_content("Register Here")
+    expect(page).to have_link("Cancel")
   end
 
   scenario "registered visitor completes login form correctly" do
@@ -46,6 +49,14 @@ feature "editing user profile" do
     fill_in "Profile Picture", with: "www.goggle.com"
     click_on "Submit"
     expect(page).to have_content("Your changes have been saved")
+  end
+  scenario "registered user decides to cancel their edits" do
+    fill_in_registration_form("Seth")
+    click_on "Logout"
+    login_a_registered_user("Seth")
+    click_on "Edit Profile"
+    click_on "Cancel"
+    expect(page).to have_content("charities")
   end
 
 
