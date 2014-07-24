@@ -1,7 +1,8 @@
 <h1>Minimum Viable Products Released</h1>
 <a href="/">Back to Home</a>
+
 <%if current_user%>
-  <%if current_user["is_admin"] == true%>
+  <%if current_user["is_admin"] == "t"%>
     | <a href="/mvps/new">Add New</a>
   <%end%>
 <%end%>

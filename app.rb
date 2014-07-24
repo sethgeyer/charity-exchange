@@ -54,7 +54,7 @@ class App < Sinatra::Application
 
   get "/mvps/new" do
     current_user = @users.find_user_by_id(session[:user_id])
-    if current_user["is_admin"] == true
+    if current_user["is_admin"] == "t"
 
       erb :new_mvp
     else
