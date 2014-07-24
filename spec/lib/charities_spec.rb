@@ -21,5 +21,4 @@ describe Charities do
     end
   end
 
-
 end

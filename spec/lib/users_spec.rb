@@ -38,9 +38,7 @@ describe Users do
       person = users.find_user_by_id(id)
       expect(person["password"]).to eq("nudge")
       expect(person["profile_picture"]).to eq("www.goggle.com")
-
     end
   end
-
 
 end

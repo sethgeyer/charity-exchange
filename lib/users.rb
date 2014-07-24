@@ -19,5 +19,4 @@ class Users
     @database_connection.sql("UPDATE users SET password='#{password}', profile_picture='#{profile_picture}' WHERE id=#{id}")
   end
 
-
 end

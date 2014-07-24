@@ -2,6 +2,7 @@ require "sinatra"
 require "active_record"
 require_relative "lib/users"
 require_relative "lib/charities"
+require_relative "lib/mvps"
 
 require "rack-flash"
 require "gschool_database_connection"
@@ -14,6 +15,8 @@ class App < Sinatra::Application
     super
     @users = Users.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
     @charities = Charities.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
+    @mvps = Mvps.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
+
   end
 
   get "/" do
@@ -42,9 +45,28 @@ class App < Sinatra::Application
 
 
 
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  get "/mvps" do
+    mvps = @mvps.find_all
+    current_user = @users.find_user_by_id(session[:user_id])
+    erb :index_mvp, locals: {mvps: mvps, current_user: current_user}
+  end
 
+  get "/mvps/new" do
+    current_user = @users.find_user_by_id(session[:user_id])
+    if current_user["is_admin"] == true
 
+      erb :new_mvp
+    else
+      flash[:notice] = "You don't have permissions to add an MVP"
+      redirect "/mvps"
+    end
+  end
 
+  post "/mvps" do
+    @mvps.add_to_dbase(params[:date], params[:description])
+    redirect "/mvps"
+  end
 
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
