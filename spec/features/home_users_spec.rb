@@ -86,3 +86,12 @@ feature "visitor registration" do
   end
 
 end
+
+feature "charities index" do
+  scenario "As a user, I can see the index view of all charity applications" do
+    visit "/charities/new"
+    complete_application("Red Cross")
+    visit "/charities"
+    expect(page).to have_content("Red Cross")
+  end
+end
