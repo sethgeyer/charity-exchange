@@ -7,7 +7,7 @@ feature "visitor visits homepage" do
     expect(page).to have_link("Sign Up")
     expect(page).not_to have_button("Logout")
     expect(page).not_to have_button("Edit Profile")
-    expect(page).to have_link("charities")
+    expect(page).to have_link("Charities")
   end
 
 
@@ -23,40 +23,19 @@ feature "visitor visits homepage" do
   end
 
   scenario "visitor wants to see charities via the link on the homepage" do
-    click_on "charities"
-    expect(page).to have_content("Charities")
+    click_on "Charities"
+    expect(page).to have_css("#index_charities")
   end
 
   scenario "visitor wants to see the register page via the link on the homepage" do
     click_on "Sign Up"
-    expect(page).to have_content("Register Here")
+    expect(page).to have_css("#new_users")
     expect(page).to have_link("Cancel")
   end
 end
 
-feature "editing user profile" do
-  scenario "registered user updates their user profile" do
-    fill_in_registration_form("Seth")
-    click_on "Logout"
-    login_a_registered_user("Seth")
-    click_on "Edit Profile"
-    fill_in "Password", with: "sethy"
-    fill_in "Profile Picture", with: "www.goggle.com"
-    click_on "Submit"
-    expect(page).to have_content("Your changes have been saved")
-  end
-  scenario "registered user decides to cancel their edits" do
-    fill_in_registration_form("Seth")
-    click_on "Logout"
-    login_a_registered_user("Seth")
-    click_on "Edit Profile"
-    click_on "Cancel"
-    expect(page).to have_content("charities")
-  end
-end
 
 feature "visitor registration" do
-
   scenario "visitor fills in registration form completely and accurately" do
     fill_in_registration_form("Seth")
     expect(page).to have_content("Thanks for registering Seth.  You are now logged in.")
@@ -64,9 +43,10 @@ feature "visitor registration" do
     expect(page).not_to have_button("Login")
     expect(page).not_to have_link("Sign Up")
     expect(page).to have_link("Edit Profile")
+    expect(page).to have_css("#show_users")
   end
 
-  scenario "registered visitor completes login form correctly and routes back to homepage" do
+  scenario "registered visitor completes login form correctly and routes to show page for the user" do
     fill_in_registration_form("Seth")
     click_on "Logout"
     login_a_registered_user("Seth")
@@ -75,22 +55,63 @@ feature "visitor registration" do
     expect(page).not_to have_button("Login")
     expect(page).not_to have_link("Sign Up")
     expect(page).to have_link("Edit Profile")
-    expect(page).to have_link("charities")
+    expect(page).to have_link("Charities")
+    expect(page).to have_css("#show_users")
+
+  end
+
+  scenario "non-logged in visitor attempts to visit show page" do
+    visit "/users/50000"
+    expect(page).to have_content("You are not authorized to visit this page")
+    expect(page).to have_css("#homepage")
   end
 
   scenario "visitor fills in registration form only partially" do
     skip
   end
-
   scenario "visitor uses an already used email during registration" do
     skip
   end
-
   scenario "logged in user tries to register via the register url" do
     skip
   end
 
 end
+
+
+feature "editing user profile" do
+  scenario "registered user updates their user profile" do
+    fill_in_registration_form("Seth")
+    click_on "Logout"
+    login_a_registered_user("Seth")
+    click_on "Edit Profile"
+    fill_in "Password", with: "sethy"
+    fill_in "Profile Picture", with: "www.google.com"
+    click_on "Submit"
+    expect(page).to have_content("Your changes have been saved")
+    expect(page).to have_css("#show_users")
+    click_on "Edit Profile"
+    expect(find("#profile_picture").value).to eq("www.google.com")
+    expect(find("#password").value).to eq("sethy")
+  end
+
+  scenario "anyone besides the registered user can not change the individual's profile via the direct url" do
+    visit "/users/5000/edit"
+    expect(page).to have_content("You are not authorized to visit this page")
+    expect(page).to have_css("#homepage")
+  end
+
+  scenario "registered user decides to cancel their edits" do
+    fill_in_registration_form("Seth")
+    click_on "Logout"
+    login_a_registered_user("Seth")
+    click_on "Edit Profile"
+    click_on "Cancel"
+    expect(page).to have_css("#show_users")
+  end
+end
+
+
 
 
 feature "visitor visits charities" do
@@ -111,7 +132,7 @@ feature "visitor visits charities" do
     complete_application("United Way")
     expect(page).to have_content("Thanks for applying")
     click_on "Back to Home"
-    expect(page).to have_content("charities")
+    expect(page).to have_content("Charities")
   end
 
   scenario "As a charity, I can cancel a registration" do
@@ -127,18 +148,17 @@ end
 feature "viewing mvps"  do
   scenario "visitor clicks on the mvp link" do
     visit "/"
-    expect(page).to have_link("mvps")
-    click_on "mvps"
+    click_on "MVPs"
     expect(page).to have_content("Minimum Viable Products Released")
     expect(page).not_to have_link("Add New")
   end
 
   scenario "visitor visits mvp view and wants to return to home" do
     visit "/"
-    click_on "mvps"
+    click_on "MVPs"
     click_on "Back to Home"
 
-    expect(page).to have_content "charities"
+    expect(page).to have_content "Charities"
   end
 
 

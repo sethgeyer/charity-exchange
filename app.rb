@@ -76,10 +76,11 @@ class App < Sinatra::Application
     if current_user != nil
       set_the_session(current_user)
       flash[:notice] = "Welcome #{session[:email]}"
+      redirect "/users/#{session[:user_id]}"
     else
       flash[:notice] = "The credentials you entered are incorrect.  Please try again."
+      redirect "/"
     end
-    redirect "/"
   end
 
   #LOGOUT
@@ -93,7 +94,7 @@ class App < Sinatra::Application
 
   #NEW - USER
   get "/users/new" do
-    erb :new_user
+    erb :new_user, layout: false
   end
 
   #CREATE - USER
@@ -102,20 +103,35 @@ class App < Sinatra::Application
     current_user = @users.find_user(params[:email], params[:password])
     set_the_session(current_user)
     flash[:notice] = "Thanks for registering #{session[:email]}. You are now logged in."
-    redirect "/"
+    redirect "/users/#{session[:user_id]}"
   end
 
   #EDIT - USER
-  get "/users/edit" do
-    current_user = @users.find_user_by_id(session[:user_id])
-    erb :edit_user, locals: {current_user: current_user}
-  end
+  get "/users/:id/edit" do
+    if session[:user_id] == params[:id]
+      current_user = @users.find_user_by_id(session[:user_id])
+      erb :edit_user, locals: {current_user: current_user}, layout: false
+    else
+      flash[:notice] = "You are not authorized to visit this page"
+      redirect "/"
+    end
+    end
 
   #UPDATE - USER
   patch "/users/:id" do
     @users.update_user_info(params[:id].to_i, params[:password], params[:profile_picture])
     flash[:notice] = "Your changes have been saved"
-    redirect "/"
+    redirect "/users/#{session[:user_id]}"
+  end
+
+  #SHOW - USER
+  get "/users/:id" do
+    if session[:user_id] == params[:id]
+      erb :show_user
+    else
+      flash[:notice] = "You are not authorized to visit this page"
+      redirect "/"
+    end
   end
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
