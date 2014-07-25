@@ -160,6 +160,12 @@ feature "viewing mvps"  do
 
     expect(page).to have_content "Charities"
   end
+end
 
-
+feature "funding a user account" do
+  scenario "As a user I can put money into my account" do
+    fill_in_registration_form("Seth")
+    click_on "Fund My Account"
+    expect(page).to have_css("#edit_accounts")
+  end
 end

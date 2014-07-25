@@ -3,6 +3,7 @@ require "active_record"
 require_relative "lib/users"
 require_relative "lib/charities"
 require_relative "lib/mvps"
+require_relative "lib/accounts"
 
 require "rack-flash"
 require "gschool_database_connection"
@@ -17,6 +18,7 @@ class App < Sinatra::Application
     @charities = Charities.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
     @mvps = Mvps.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
 
+    @accounts = Accounts.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
   end
 
   get "/" do
@@ -24,6 +26,14 @@ class App < Sinatra::Application
   end
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  #EDIT - ACCOUNT
+  patch "/accounts/:id/edit" do
+    erb :edit_user
+  end
+
+
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   #NEW - CHARITY
   get "/charities/new" do
@@ -127,7 +137,8 @@ class App < Sinatra::Application
   #SHOW - USER
   get "/users/:id" do
     if session[:user_id] == params[:id]
-      erb :show_user
+      # account = @accounts.find_by_user_id(session[:user_id])
+      erb :show_user#, locals: {account: account}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"
