@@ -15,11 +15,12 @@ class App < Sinatra::Application
 
   def initialize
     super
-    @users = Users.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-    @charities = Charities.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-    @mvps = Mvps.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-    @deposits = Deposits.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-    @accounts = Accounts.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
+    dbase_argument = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+    @users = Users.new(dbase_argument)
+    @charities = Charities.new(dbase_argument)
+    @mvps = Mvps.new(dbase_argument)
+    @deposits = Deposits.new(dbase_argument)
+    @accounts = Accounts.new(dbase_argument)
   end
 
   get "/" do
@@ -46,7 +47,10 @@ class App < Sinatra::Application
 
   #CREATE - DEPOSITS
   post "/deposits" do
+    @deposits.create_in_dbase(params[:account_id], params[:amount], params[:cc_number], params[:exp_date], params[:name_on_card], params[:radio_cc_type])
+    deposit = @deposits.find_most_recent(params[:account_id])
 
+    flash[:notice] = "Thank you for depositing $#{deposit["amount"]} into your account"
 
     redirect "/users/#{session[:user_id]}"
   end

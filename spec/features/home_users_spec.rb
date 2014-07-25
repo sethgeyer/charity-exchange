@@ -194,12 +194,13 @@ feature "Add Funds to Account" do
     click_on "Fund My Account"
     fill_in "Amount", with: "400"
     fill_in "Credit Card Number", with: "123456789"
-    fill_in "Exp Date", with: "12/13"
+    fill_in "Exp Date", with: "2014-07-31"
     fill_in "Name on Card", with: "Seth Geyer"
     within(page.find("#new_deposits")) { choose "Visa" }
     click_on "Submit"
     expect(page).to have_css("#show_users")
-    expect(page).to have_content("$400")
+    expect(page).to have_content("Thank you for depositing $400 into your account")
+    # expect(page).to have_content("$400")
   end
 end
 
