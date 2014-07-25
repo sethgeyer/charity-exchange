@@ -60,11 +60,7 @@ feature "visitor registration" do
 
   end
 
-  scenario "non-logged in visitor attempts to visit show page" do
-    visit "/users/50000"
-    expect(page).to have_content("You are not authorized to visit this page")
-    expect(page).to have_css("#homepage")
-  end
+
 
   scenario "visitor fills in registration form only partially" do
     skip
@@ -162,10 +158,48 @@ feature "viewing mvps"  do
   end
 end
 
-feature "funding a user account" do
-  scenario "As a user I can put money into my account" do
+feature "Users Show Page" do
+
+  scenario "As a logged in user I can view my account details page" do
+    fill_in_registration_form("Seth")
+    expect(page).to have_content("Amount")
+    expect(page).to have_content("$0")
+  end
+
+  scenario "As a logged_in user I can link to the edit account page to fund my account" do
     fill_in_registration_form("Seth")
     click_on "Fund My Account"
-    expect(page).to have_css("#edit_accounts")
+    expect(page).to have_css("#new_deposits")
+  end
+
+  scenario "non-logged in visitor attempts to visit show page" do
+    visit "/users/50000"
+    expect(page).to have_content("You are not authorized to visit this page")
+    expect(page).to have_css("#homepage")
+  end
+
+end
+
+feature "Add Funds to Account" do
+
+  scenario "As a non-logged_in user, I should not be able to visit the show page directly via typing in a uRL" do
+    visit "/deposits/new/5000"
+    expect(page).to have_content("You are not authorized to visit this page")
+    expect(page).to have_css("#homepage")
+  end
+
+
+  scenario "As a user I can add funds to my account" do
+    fill_in_registration_form("Seth")
+    click_on "Fund My Account"
+    fill_in "Amount", with: "400"
+    fill_in "Credit Card Number", with: "123456789"
+    fill_in "Exp Date", with: "12/13"
+    fill_in "Name on Card", with: "Seth Geyer"
+    within(page.find("#new_deposits")) { choose "Visa" }
+    click_on "Submit"
+    expect(page).to have_css("#show_users")
+    expect(page).to have_content("$400")
   end
 end
+

@@ -2,7 +2,20 @@
 <h1>Account Details</h1>
 <hr />
 
-<a href="/accounts/edit">Fund My Account</a>
+<table>
+  <thead>
+  <td>Amount</td>
+  <td>User ID</td>
+  </thead>
+  <tbody>
+  <tr>
+    <td>$<%=account["amount"]%></td>
+    <td><%=account["user_id"]%></td>
+  </tr>
+  </tbody>
+</table>
+
+<a href="/deposits/new/<%=account["id"]%>">Fund My Account</a>
 
 
 

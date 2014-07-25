@@ -12,13 +12,7 @@ describe Users do
       expect(database_connection.sql("SELECT COUNT(*) FROM users").first["count"].to_i).to eq(1)
     end
 
-    it "triggers the creation of an account for the new user" do
-      expect(database_connection.sql("SELECT COUNT(*) FROM accounts").first["count"].to_i).to eq(0)
-      users.create_new_user_in_dbase("sgeyer@gmail.com", "fudge", "http://google.com")
-      id = database_connection.sql("SELECT id from users WHERE email='sgeyer@gmail.com'")
-      created_account = database_connection.sql("SELECT * from accounts").first
-      expect(created_account["user_id"]).to eq(id)
-    end
+
 
   end
 

@@ -4,6 +4,7 @@ require_relative "lib/users"
 require_relative "lib/charities"
 require_relative "lib/mvps"
 require_relative "lib/accounts"
+require_relative "lib/deposits"
 
 require "rack-flash"
 require "gschool_database_connection"
@@ -17,7 +18,7 @@ class App < Sinatra::Application
     @users = Users.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
     @charities = Charities.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
     @mvps = Mvps.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
-
+    @deposits = Deposits.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
     @accounts = Accounts.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"]))
   end
 
@@ -27,11 +28,28 @@ class App < Sinatra::Application
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  #EDIT - ACCOUNT
-  patch "/accounts/:id/edit" do
-    erb :edit_user
+  #NEW - DEPOSITS
+  get "/deposits/new/:id" do
+    if @accounts.find_by_id(params[:id]) != nil
+      account = @accounts.find_by_id(params[:id])
+      if session[:user_id] == account["user_id"]
+        erb :new_deposit, locals: {account: account}
+      else
+        flash[:notice] = "You are not authorized to visit this page"
+        redirect "/"
+      end
+    else
+      flash[:notice] = "You are not authorized to visit this page"
+      redirect "/"
+    end
   end
 
+  #CREATE - DEPOSITS
+  post "/deposits" do
+
+
+    redirect "/users/#{session[:user_id]}"
+  end
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -112,6 +130,7 @@ class App < Sinatra::Application
     @users.create_new_user_in_dbase(params[:email], params[:password], params[:profile_picture])
     current_user = @users.find_user(params[:email], params[:password])
     set_the_session(current_user)
+    @accounts.create_in_dbase(session[:user_id])
     flash[:notice] = "Thanks for registering #{session[:email]}. You are now logged in."
     redirect "/users/#{session[:user_id]}"
   end
@@ -137,8 +156,8 @@ class App < Sinatra::Application
   #SHOW - USER
   get "/users/:id" do
     if session[:user_id] == params[:id]
-      # account = @accounts.find_by_user_id(session[:user_id])
-      erb :show_user#, locals: {account: account}
+      account = @accounts.find_by_user_id(session[:user_id])
+      erb :show_user, locals: {account: account}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"
