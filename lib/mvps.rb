@@ -4,7 +4,7 @@ class Mvps
   end
 
   def find_all
-    @database_connection.sql("SELECT * from mvps")
+    @database_connection.sql("SELECT * from mvps ORDER BY date  DESC")
   end
 
   def add_to_dbase(date, description)
