@@ -5,7 +5,6 @@ require_relative "lib/charities"
 require_relative "lib/mvps"
 require_relative "lib/accounts"
 require_relative "lib/deposits"
-
 require "rack-flash"
 require "gschool_database_connection"
 
@@ -50,7 +49,7 @@ class App < Sinatra::Application
     @deposits.create_in_dbase(params[:account_id], params[:amount], params[:cc_number], params[:exp_date], params[:name_on_card], params[:radio_cc_type])
     deposit = @deposits.find_most_recent(params[:account_id])
 
-    flash[:notice] = "Thank you for depositing $#{deposit["amount"]} into your account"
+    flash[:notice] = "Thank you for depositing $#{deposit["amount"].to_i / 100} into your account"
 
     redirect "/users/#{session[:user_id]}"
   end
@@ -161,7 +160,9 @@ class App < Sinatra::Application
   get "/users/:id" do
     if session[:user_id] == params[:id]
       account = @accounts.find_by_user_id(session[:user_id])
-      erb :show_user, locals: {account: account}
+      deposit_total = @deposits.sum_by_account_id(account["id"])
+      net_amount = deposit_total
+      erb :show_user, locals: {account: account, deposit_total: deposit_total, net_amount: net_amount}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"

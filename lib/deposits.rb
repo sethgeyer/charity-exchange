@@ -4,13 +4,16 @@ class Deposits
   end
 
   def create_in_dbase(id, amount, cc_number, exp_date, name_on_card, cc_type)
-    @database_connection.sql("INSERT INTO deposits (account_id, amount, cc_number, exp_date, name_on_card, cc_type) VALUES (#{id}, #{amount}, #{cc_number}, '#{exp_date}', '#{name_on_card}', '#{cc_type}')")
+    @database_connection.sql("INSERT INTO deposits (account_id, amount, cc_number, exp_date, name_on_card, cc_type) VALUES (#{id}, #{amount.to_i * 100}, #{cc_number}, '#{exp_date}', '#{name_on_card}', '#{cc_type}')")
   end
 
   def find_most_recent(account_id)
-    @database_connection.sql("select * from deposits where account_id=#{account_id} order by id asc").first
+    @database_connection.sql("SELECT * FROM deposits WHERE account_id=#{account_id} ORDER BY id DESC").first
   end
 
-#### BUILD A SPEC TEST FOR FIND MOST RECENT
+  def sum_by_account_id(account_id)
+    @database_connection.sql("SELECT SUM(amount) FROM deposits WHERE account_id=#{account_id} ").first["sum"].to_i / 100
+  end
+
 
 end

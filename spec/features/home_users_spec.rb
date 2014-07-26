@@ -191,16 +191,16 @@ feature "Add Funds to Account" do
 
   scenario "As a user I can add funds to my account" do
     fill_in_registration_form("Seth")
-    click_on "Fund My Account"
-    fill_in "Amount", with: "400"
-    fill_in "Credit Card Number", with: "123456789"
-    fill_in "Exp Date", with: "2014-07-31"
-    fill_in "Name on Card", with: "Seth Geyer"
-    within(page.find("#new_deposits")) { choose "Visa" }
-    click_on "Submit"
+    fund_my_account_with_a_credit_card(400)
     expect(page).to have_css("#show_users")
     expect(page).to have_content("Thank you for depositing $400 into your account")
-    # expect(page).to have_content("$400")
+    expect(page.find("#deposits")).to have_content("$400")
+    expect(page.find("#net_amount")).to have_content("$400")
+    fund_my_account_with_a_credit_card(500)
+    expect(page).to have_content("Thank you for depositing $500 into your account")
+    expect(page.find("#deposits")).to have_content("$900")
+    expect(page.find("#net_amount")).to have_content("$900")
+
   end
 end
 
