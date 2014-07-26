@@ -5,6 +5,7 @@ require_relative "lib/charities"
 require_relative "lib/mvps"
 require_relative "lib/accounts"
 require_relative "lib/deposits"
+require_relative "lib/distributions"
 require "rack-flash"
 require "gschool_database_connection"
 
@@ -20,6 +21,7 @@ class App < Sinatra::Application
     @mvps = Mvps.new(dbase_argument)
     @deposits = Deposits.new(dbase_argument)
     @accounts = Accounts.new(dbase_argument)
+    @distributions = Distributions.new(dbase_argument)
   end
 
   get "/" do
@@ -28,20 +30,26 @@ class App < Sinatra::Application
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+  #NEW - DISTRIBUTIONS
+  get "/distributions/new/:id" do
+    @charities_for_selection = @charities.find_all
+    render_page_or_redirect_to_homepage(params[:id], "new_distribution")
+  end
+
+  #CREATE - DISTRIBUTIONS
+  post "/distributions" do
+    @distributions.create_in_dbase(params[:account_id], params[:amount], params[:charity_dd])
+    distribution = @distributions.find_most_recent(params[:account_id])
+    flash[:notice] = "Thank you for distributing $#{distribution["amount"].to_i / 100} from your account to #{distribution["charity"]}"
+    redirect "/users/#{session[:user_id]}"
+  end
+
+
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
   #NEW - DEPOSITS
   get "/deposits/new/:id" do
-    if @accounts.find_by_id(params[:id]) != nil
-      account = @accounts.find_by_id(params[:id])
-      if session[:user_id] == account["user_id"]
-        erb :new_deposit, locals: {account: account}
-      else
-        flash[:notice] = "You are not authorized to visit this page"
-        redirect "/"
-      end
-    else
-      flash[:notice] = "You are not authorized to visit this page"
-      redirect "/"
-    end
+    render_page_or_redirect_to_homepage(params[:id], "new_deposit")
   end
 
   #CREATE - DEPOSITS
@@ -161,8 +169,9 @@ class App < Sinatra::Application
     if session[:user_id] == params[:id]
       account = @accounts.find_by_user_id(session[:user_id])
       deposit_total = @deposits.sum_by_account_id(account["id"])
-      net_amount = deposit_total
-      erb :show_user, locals: {account: account, deposit_total: deposit_total, net_amount: net_amount}
+      distribution_total = @distributions.sum_by_account_id(account["id"])
+      net_amount = deposit_total - distribution_total
+      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, net_amount: net_amount}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"
@@ -176,5 +185,25 @@ class App < Sinatra::Application
     session[:user_id] = current_user["id"]
     session[:email] = current_user["email"]
   end
+
+  def render_page_or_redirect_to_homepage(id, name_of_erb_template)
+    if @accounts.find_by_id(params[:id]) != nil
+      account = @accounts.find_by_id(params[:id])
+      if session[:user_id] == account["user_id"]
+        erb name_of_erb_template.to_sym, locals: {account: account}
+      else
+        flash[:notice] = "You are not authorized to visit this page"
+        redirect "/"
+      end
+    else
+      flash[:notice] = "You are not authorized to visit this page"
+      redirect "/"
+    end
+
+  end
+
+
+
+
 
 end
