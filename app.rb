@@ -6,6 +6,7 @@ require_relative "lib/mvps"
 require_relative "lib/accounts"
 require_relative "lib/deposits"
 require_relative "lib/distributions"
+require_relative "lib/proposed_wagers"
 require "rack-flash"
 require "gschool_database_connection"
 
@@ -22,11 +23,31 @@ class App < Sinatra::Application
     @deposits = Deposits.new(dbase_argument)
     @accounts = Accounts.new(dbase_argument)
     @distributions = Distributions.new(dbase_argument)
+    @proposed_wagers = ProposedWagers.new(dbase_argument)
+
   end
 
   get "/" do
   erb :home
   end
+
+  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  #NEW - PROPOSED_WAGERS
+  get "/proposed_wagers/new" do
+    @list_of_users = @users.all_but_current_user(session[:user_id])
+    render_page_or_redirect_to_homepage(session[:user_id], "new_proposed_wager")
+  end
+
+  post "/proposed_wagers" do
+    @proposed_wagers.create_in_dbase(session[:user_id], params[:title], params[:date_of_wager], params[:details], params[:amount], params[:wageree_id])
+    puts "*" * 50
+    wageree = @users.find_user_by_id(params[:wageree_id])
+    flash[:notice] = "You're proposed wager has been sent"#" to #{wageree["email"]}"
+    redirect "/users/#{session[:user_id]}"
+  end
+
+
+
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -183,7 +204,8 @@ class App < Sinatra::Application
       deposit_total = @deposits.sum_by_account_id(account["id"])
       distribution_total = @distributions.sum_by_account_id(account["id"])
       net_amount = deposit_total - distribution_total
-      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, net_amount: net_amount}
+      proposed_wagers = @proposed_wagers.find_all(session[:user_id])
+      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, net_amount: net_amount, proposed_wagers: proposed_wagers}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"

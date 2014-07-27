@@ -44,4 +44,17 @@ describe Users do
     end
   end
 
+  describe "#all" do
+    it "returns all users except for the current user" do
+      database_connection.sql("INSERT INTO users (id, email, password) VALUES (1, 'seth@gmail.com', 'seth')")
+      database_connection.sql("INSERT INTO users (id, email, password) VALUES (2, 'alex@gmail.com', 'alex')")
+      database_connection.sql("INSERT INTO users (id, email, password) VALUES (3, 'bill@gmail.com', 'bill')")
+      list_of_users = users.all_but_current_user('1')
+      expect(list_of_users.size).to eq(2)
+    end
+  end
+
+
+
+
 end

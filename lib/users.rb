@@ -19,4 +19,8 @@ class Users
     @database_connection.sql("UPDATE users SET password='#{password}', profile_picture='#{profile_picture}' WHERE id=#{id}")
   end
 
+  def all_but_current_user(id)
+    @database_connection.sql("SELECT * FROM users WHERE id !=#{id.to_i}")
+  end
+
 end

@@ -11,7 +11,6 @@ feature "visitor visits homepage" do
     expect(page).not_to have_link("Account Details")
   end
 
-
   scenario "non-registered visitor tries to login or visitor logs in w/ incorrect credentials" do
     fill_in "Email", with: "Seth"
     fill_in "Password", with: "123"
@@ -180,6 +179,15 @@ feature "Users Show Page" do
       expect(page).to have_css("#new_deposits")
   end
 
+  scenario "As a logged_in user I can link to the 'create a wager' page to create a wager" do
+    fill_in_registration_form("Seth")
+    click_on "Create a Wager"
+    expect(page).to have_css("#new_proposed_wagers")
+  end
+
+
+
+
   scenario "As a logged_in user I can link to the new distributions page to distribute funds from my account" do
     fill_in_registration_form("Seth")
     click_on "Distribute Funds"
@@ -267,22 +275,9 @@ feature "View History of Deposits" do
 end
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 feature "Distribute Funds from the Account" do
 
-  scenario "As a non-logged_in user, I should not be able to visit the show page directly via typing in a uRL" do
+  scenario "As a non-logged_in user, I should not be able to visit the new distributions page directly via typing in a uRL" do
     visit "/distributions/new"
       expect(page).to have_content("You are not authorized to visit this page")
       expect(page).to have_css("#homepage")
@@ -307,6 +302,32 @@ feature "Distribute Funds from the Account" do
       expect(page.find("#deposits")).to have_content("$400")
       expect(page.find("#distributions")).to have_content("$150")
       expect(page.find("#net_amount")).to have_content("$250")
+  end
+end
+
+
+feature "Create a Proposed Wager" do
+  scenario "As a non-logged in visitor, I should not be able to visit the new proposed wager view directly via the URL " do
+    visit "/proposed_wagers/new"
+      expect(page).to have_content("You are not authorized to visit this page")
+      expect(page).to have_css("#homepage")
+  end
+
+
+  scenario "As a user I can create a proposed wager" do
+    fill_in_registration_form("Alex")
+    click_on "Logout"
+    fill_in_registration_form("Seth")
+    fund_my_account_with_a_credit_card(400)
+    visit "/proposed_wagers/new"
+    fill_in "Title", with: "Ping Pong Match between Seth and Alex"
+    fill_in "Date of Wager", with: "2014-07-31"
+    fill_in "Details", with: "Game to 21, standard rules apply"
+    fill_in "Amount", with: 200
+    select "Alex", from: "Wageree"
+    click_on "Submit"
+      # expect(page).to have_content("You're proposed wager has been sent to Alex")
+      expect(page.find("#show_users")).to have_content("Ping Pong Match")
   end
 end
 

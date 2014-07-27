@@ -19,10 +19,28 @@
 
 <a href="/deposits/new">Fund My Account</a> |
 <a href="/distributions/new">Distribute Funds</a>
+<a href="/proposed_wagers/new">Create a Wager</a>
 
 <a href="/deposits">Show Deposit History</a>
 <a href="/distributions">Show Distribution History</a>
 
+
+<table>
+  <thead>
+  <th>Title</th>
+  <th>Amount</th>
+  <th>Wageree</th>
+  </thead>
+  <tbody>
+  <%proposed_wagers.each do |wager_hash|%>
+    <tr>
+      <td><%=wager_hash["title"]%></td>
+      <td><%=wager_hash["amount"]%></td>
+      <td>< %=wager_hash["wageree_id"]%></td>
+    </tr>
+  </tbody>
+  <%end%>
+    </table>
 
 
 
