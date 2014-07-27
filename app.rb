@@ -31,9 +31,9 @@ class App < Sinatra::Application
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   #NEW - DISTRIBUTIONS
-  get "/distributions/new/:id" do
+  get "/distributions/new" do
     @charities_for_selection = @charities.find_all
-    render_page_or_redirect_to_homepage(params[:id], "new_distribution")
+    render_page_or_redirect_to_homepage(session[:user_id], "new_distribution")
   end
 
   #CREATE - DISTRIBUTIONS
@@ -48,8 +48,8 @@ class App < Sinatra::Application
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   #NEW - DEPOSITS
-  get "/deposits/new/:id" do
-    render_page_or_redirect_to_homepage(params[:id], "new_deposit")
+  get "/deposits/new" do
+    render_page_or_redirect_to_homepage(session[:user_id], "new_deposit")
   end
 
   #CREATE - DEPOSITS
@@ -61,6 +61,14 @@ class App < Sinatra::Application
 
     redirect "/users/#{session[:user_id]}"
   end
+
+  #INDEX - DEPOSITS
+  get "/deposits" do
+    account_id = @accounts.find_by_user_id(session[:user_id])
+    erb :index_deposit
+  end
+
+
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -186,20 +194,19 @@ class App < Sinatra::Application
     session[:email] = current_user["email"]
   end
 
-  def render_page_or_redirect_to_homepage(id, name_of_erb_template)
-    if @accounts.find_by_id(params[:id]) != nil
-      account = @accounts.find_by_id(params[:id])
-      if session[:user_id] == account["user_id"]
+  def render_page_or_redirect_to_homepage(session_id, name_of_erb_template)
+    if session_id == nil
+      flash[:notice] = "You are not authorized to visit this page"
+      redirect "/"
+    else
+      account = @accounts.find_by_user_id(session_id)
+      if session_id == account["user_id"]
         erb name_of_erb_template.to_sym, locals: {account: account}
       else
         flash[:notice] = "You are not authorized to visit this page"
         redirect "/"
       end
-    else
-      flash[:notice] = "You are not authorized to visit this page"
-      redirect "/"
     end
-
   end
 
 

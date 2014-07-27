@@ -8,6 +8,7 @@ feature "visitor visits homepage" do
     expect(page).not_to have_button("Logout")
     expect(page).not_to have_button("Edit Profile")
     expect(page).to have_link("Charities")
+    expect(page).not_to have_link("Account Details")
   end
 
 
@@ -20,6 +21,12 @@ feature "visitor visits homepage" do
       expect(page).not_to have_button("Logout")
       expect(page).to have_link("Sign Up")
       expect(page).not_to have_link("Edit Profile")
+  end
+
+  scenario "logged in user wants to see their account details" do
+    fill_in_registration_form("Seth")
+    click_on "Account Details"
+    expect(page).to have_css("#show_users")
   end
 
   scenario "visitor wants to see charities via the link on the homepage" do
@@ -190,7 +197,7 @@ end
 feature "Add Funds to Account" do
 
   scenario "As a non-logged_in user, I should not be able to visit the show page directly via typing in a uRL" do
-    visit "/deposits/new/5000"
+    visit "/deposits/new"
       expect(page).to have_content("You are not authorized to visit this page")
       expect(page).to have_css("#homepage")
   end
@@ -211,10 +218,21 @@ feature "Add Funds to Account" do
   end
 end
 
+feature "View History of Deposits" do
+  scenario "As a user, I should be able to view my history of deposits" do
+    fill_in_registration_form("Seth")
+    fund_my_account_with_a_credit_card(400)
+    fund_my_account_with_a_credit_card(500)
+    click_on "Show Deposit History"
+      expect(page).to have_css("#index_deposits")
+    end
+end
+
+
 feature "Distribute Funds from the Account" do
 
   scenario "As a non-logged_in user, I should not be able to visit the show page directly via typing in a uRL" do
-    visit "/distributions/new/5000"
+    visit "/distributions/new"
       expect(page).to have_content("You are not authorized to visit this page")
       expect(page).to have_css("#homepage")
   end
