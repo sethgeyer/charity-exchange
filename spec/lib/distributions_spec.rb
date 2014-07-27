@@ -37,4 +37,18 @@ describe Distributions do
     end
   end
 
+  describe "#find_by_account_id" do
+    it "returns an array of all distributions for a particular account" do
+      database_connection.sql("INSERT INTO distributions (id, account_id, amount, charity) VALUES (7, 1, 30000, 'United Way')")
+      database_connection.sql("INSERT INTO distributions (id, account_id, amount, charity) VALUES (8, 1, 40000, 'Red Cross')")
+      database_connection.sql("INSERT INTO distributions (id, account_id, amount, charity) VALUES (9, 5, 40000, 'Unicef')")
+      distribution = distributions.find_by_account_id(1)
+      expect(distribution.size).to eq(2)
+    end
+  end
+
+
+
+
+
 end

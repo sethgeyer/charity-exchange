@@ -225,8 +225,59 @@ feature "View History of Deposits" do
     fund_my_account_with_a_credit_card(500)
     click_on "Show Deposit History"
       expect(page).to have_css("#index_deposits")
+      expect(page).to have_content("$400")
+      expect(page).not_to have_content("$40000")
+      expect(page).to have_content("$500")
     end
 end
+
+feature "View History of Deposits" do
+  scenario "As a non-logged in visitor, I should NOT be able to view a history of deposits" do
+    visit "/deposits"
+    expect(page).to have_content("You are not authorized to visit this page")
+    expect(page).to have_css("#homepage")
+  end
+end
+
+feature "View History of Distributions" do
+  scenario "As a user, I should be able to view my history of distributions" do
+    visit "/charities/new"
+    complete_application("United Way")
+    visit "/charities/new"
+    complete_application("Red Cross")
+    fill_in_registration_form("Seth")
+    fund_my_account_with_a_credit_card(400)
+    fund_my_account_with_a_credit_card(500)
+    distribute_funds_from_my_account(100, "United Way")
+    distribute_funds_from_my_account(200, "Red Cross")
+    click_on "Show Distribution History"
+    expect(page).to have_css("#index_distributions")
+    expect(page).to have_content("$100")
+    expect(page).not_to have_content("$10000")
+    expect(page).to have_content("$200")
+  end
+end
+
+feature "View History of Deposits" do
+  scenario "As a non-logged in visitor, I should NOT be able to view a history of deposits" do
+    visit "/deposits"
+    expect(page).to have_content("You are not authorized to visit this page")
+    expect(page).to have_css("#homepage")
+  end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 feature "Distribute Funds from the Account" do

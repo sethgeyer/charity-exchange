@@ -44,6 +44,11 @@ class App < Sinatra::Application
     redirect "/users/#{session[:user_id]}"
   end
 
+  #INDEX - DEPOSITS
+  get "/distributions" do
+    render_page_or_redirect_to_homepage(session[:user_id], "index_distribution")
+  end
+
 
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -64,8 +69,7 @@ class App < Sinatra::Application
 
   #INDEX - DEPOSITS
   get "/deposits" do
-    account_id = @accounts.find_by_user_id(session[:user_id])
-    erb :index_deposit
+    render_page_or_redirect_to_homepage(session[:user_id], "index_deposit")
   end
 
 
@@ -201,7 +205,9 @@ class App < Sinatra::Application
     else
       account = @accounts.find_by_user_id(session_id)
       if session_id == account["user_id"]
-        erb name_of_erb_template.to_sym, locals: {account: account}
+        deposits_array = @deposits.find_by_account_id(account["id"])
+        distributions_array = @distributions.find_by_account_id(account["id"])
+        erb name_of_erb_template.to_sym, locals: {account: account, deposits_array: deposits_array, distributions_array: distributions_array}
       else
         flash[:notice] = "You are not authorized to visit this page"
         redirect "/"

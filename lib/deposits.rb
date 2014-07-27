@@ -8,12 +8,15 @@ class Deposits
   end
 
   def find_most_recent(account_id)
-    @database_connection.sql("SELECT * FROM deposits WHERE account_id=#{account_id} ORDER BY id DESC").first
+    find_by_account_id(account_id).first
   end
 
   def sum_by_account_id(account_id)
     @database_connection.sql("SELECT SUM(amount) FROM deposits WHERE account_id=#{account_id} ").first["sum"].to_i / 100
   end
 
+  def find_by_account_id(account_id)
+    @database_connection.sql("SELECT * FROM deposits WHERE account_id=#{account_id} ORDER BY id DESC")
+  end
 
 end

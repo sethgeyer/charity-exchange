@@ -37,6 +37,16 @@ describe Deposits do
     end
   end
 
+  describe "#find_by_account_id" do
+    it "returns an array of all deposits for a particular account" do
+      database_connection.sql("INSERT INTO deposits (id, account_id, amount, cc_number, exp_date, name_on_card, cc_type) VALUES (7, 1, 30000, 123456789, '2015-07-31', 'Seth Geyer', 'Visa')")
+      database_connection.sql("INSERT INTO deposits (id, account_id, amount, cc_number, exp_date, name_on_card, cc_type) VALUES (8, 1, 40000, 123456789, '2015-08-31', 'Seth Geyer', 'Visa')")
+      database_connection.sql("INSERT INTO deposits (id, account_id, amount, cc_number, exp_date, name_on_card, cc_type) VALUES (9, 5, 40000, 123456789, '2015-08-31', 'Seth Geyer', 'Visa')")
+      deposit = deposits.find_by_account_id(1)
+      expect(deposit.size).to eq(2)
+    end
+  end
+
 
 
 
