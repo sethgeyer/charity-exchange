@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe ProposedWagers do
+describe ProposedWager do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:proposed_wagers) { ProposedWagers.new(database_connection) }
+  let(:proposed_wagers) { ProposedWager.new(database_connection) }
 
   describe "#create_in_dbase" do
     it "creates a proposed_wager record in the database" do

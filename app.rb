@@ -1,12 +1,12 @@
 require "sinatra"
 require "active_record"
-require_relative "lib/users"
-require_relative "lib/charities"
-require_relative "lib/mvps"
-require_relative "lib/accounts"
-require_relative "lib/deposits"
-require_relative "lib/distributions"
-require_relative "lib/proposed_wagers"
+require_relative "lib/user"
+require_relative "lib/charity"
+require_relative "lib/mvp"
+require_relative "lib/account"
+require_relative "lib/deposit"
+require_relative "lib/distribution"
+require_relative "lib/proposed_wager"
 require "rack-flash"
 require "gschool_database_connection"
 
@@ -17,13 +17,13 @@ class App < Sinatra::Application
   def initialize
     super
     dbase_argument = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
-    @users = Users.new(dbase_argument)
-    @charities = Charities.new(dbase_argument)
-    @mvps = Mvps.new(dbase_argument)
-    @deposits = Deposits.new(dbase_argument)
-    @accounts = Accounts.new(dbase_argument)
-    @distributions = Distributions.new(dbase_argument)
-    @proposed_wagers = ProposedWagers.new(dbase_argument)
+    @users = User.new(dbase_argument)
+    @charities = Charity.new(dbase_argument)
+    @mvps = Mvp.new(dbase_argument)
+    @deposits = Deposit.new(dbase_argument)
+    @accounts = Account.new(dbase_argument)
+    @distributions = Distribution.new(dbase_argument)
+    @proposed_wagers = ProposedWager.new(dbase_argument)
 
   end
 

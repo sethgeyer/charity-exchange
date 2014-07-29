@@ -1,7 +1,7 @@
-describe Distributions do
+describe Distribution do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:distributions) { Distributions.new(database_connection)}
+  let(:distributions) { Distribution.new(database_connection)}
 
   before(:each) do
     database_connection.sql("INSERT INTO users (email, password, id) VALUES ('sgeyer@gmail.com', 'sethy', 5)")

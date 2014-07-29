@@ -1,7 +1,7 @@
-describe Charities do
+describe Charity do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:charities) { Charities.new(database_connection)}
+  let(:charities) { Charity.new(database_connection)}
 
   describe "#find_all" do
     it "returns a list of all charities" do

@@ -1,7 +1,7 @@
-describe Deposits do
+describe Deposit do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:deposits) { Deposits.new(database_connection)}
+  let(:deposits) { Deposit.new(database_connection)}
 
   before(:each) do
     database_connection.sql("INSERT INTO users (email, password, id) VALUES ('sgeyer@gmail.com', 'sethy', 5)")

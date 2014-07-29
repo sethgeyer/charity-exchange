@@ -1,7 +1,7 @@
-describe Accounts do
+describe Account do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:accounts) { Accounts.new(database_connection)}
+  let(:accounts) { Account.new(database_connection)}
 
   describe "#create_in_dbase" do
     it "triggers the creation of an account for the new user" do

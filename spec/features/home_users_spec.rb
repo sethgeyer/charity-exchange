@@ -134,14 +134,14 @@ feature "visitor visits charities" do
     complete_application("United Way")
       expect(page).to have_content("Thanks for applying")
     click_on "Back to Home"
-      expect(page).to have_content("Charities")
+      expect(page).to have_content("Charity")
   end
 
   scenario "As a charity, I can cancel a registration" do
     click_on "Register a new charity"
       expect(page).to have_link("Cancel")
     click_on "Cancel"
-      expect(page).to have_content("Charities")
+      expect(page).to have_content("Charity")
   end
 
 end
@@ -160,11 +160,11 @@ feature "viewing mvps"  do
     click_on "MVPs"
     click_on "Back to Home"
 
-     expect(page).to have_content "Charities"
+     expect(page).to have_content "Charity"
   end
 end
 
-feature "Users Show Page" do
+feature "User Show Page" do
 
   scenario "As a logged in user I can view my account details page" do
     fill_in_registration_form("Seth")
@@ -226,7 +226,7 @@ feature "Add Funds to Account" do
   end
 end
 
-feature "View History of Deposits" do
+feature "View History of Deposit" do
   scenario "As a user, I should be able to view my history of deposits" do
     fill_in_registration_form("Seth")
     fund_my_account_with_a_credit_card(400)
@@ -239,7 +239,7 @@ feature "View History of Deposits" do
     end
 end
 
-feature "View History of Deposits" do
+feature "View History of Deposit" do
   scenario "As a non-logged in visitor, I should NOT be able to view a history of deposits" do
     visit "/deposits"
     expect(page).to have_content("You are not authorized to visit this page")
@@ -247,7 +247,7 @@ feature "View History of Deposits" do
   end
 end
 
-feature "View History of Distributions" do
+feature "View History of Distribution" do
   scenario "As a user, I should be able to view my history of distributions" do
     visit "/charities/new"
     complete_application("United Way")
@@ -266,7 +266,7 @@ feature "View History of Distributions" do
   end
 end
 
-feature "View History of Deposits" do
+feature "View History of Deposit" do
   scenario "As a non-logged in visitor, I should NOT be able to view a history of deposits" do
     visit "/deposits"
     expect(page).to have_content("You are not authorized to visit this page")

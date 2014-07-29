@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Users do
+describe User do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:users) { Users.new(database_connection) }
+  let(:users) { User.new(database_connection) }
 
   describe "#create_new_user_in_dbase" do
     it "creates a user record in the database" do

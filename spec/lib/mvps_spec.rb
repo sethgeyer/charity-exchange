@@ -1,7 +1,7 @@
-describe Mvps do
+describe Mvp do
 
   let(:database_connection) { GschoolDatabaseConnection::DatabaseConnection.establish("test") }
-  let(:mvps) { Mvps.new(database_connection)}
+  let(:mvps) { Mvp.new(database_connection)}
 
   describe "#find_all" do
     it "returns a list of all mvps" do

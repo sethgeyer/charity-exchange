@@ -1,4 +1,4 @@
-class Accounts
+class Account
   def initialize(db_connection)
     @database_connection = db_connection
   end
