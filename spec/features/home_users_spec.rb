@@ -327,7 +327,9 @@ feature "Create a Proposed Wager" do
     select "Alex", from: "Wageree"
     click_on "Submit"
       # expect(page).to have_content("You're proposed wager has been sent to Alex")
-      expect(page.find("#show_users")).to have_content("Ping Pong Match")
+      expect(page.find("#proposed_wagers_table")).to have_content("Ping Pong Match")
+      expect(page.find("#proposed_wagers_table")).to have_content(200)
+      expect(page.find("#proposed_wagers_table")).not_to have_content(20000)
   end
 end
 

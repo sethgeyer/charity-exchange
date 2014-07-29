@@ -24,8 +24,10 @@
 <a href="/deposits">Show Deposit History</a>
 <a href="/distributions">Show Distribution History</a>
 
+  <br/>
+  <br/>
 
-<table>
+<table id="proposed_wagers_table">
   <thead>
   <th>Title</th>
   <th>Amount</th>
@@ -35,8 +37,8 @@
   <%proposed_wagers.each do |wager_hash|%>
     <tr>
       <td><%=wager_hash["title"]%></td>
-      <td><%=wager_hash["amount"]%></td>
-      <td>< %=wager_hash["wageree_id"]%></td>
+      <td><%=wager_hash["amount"].to_i / 100 %></td>
+      <td><%=wager_hash["wageree_id"]%></td>
     </tr>
   </tbody>
   <%end%>
