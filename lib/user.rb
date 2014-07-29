@@ -1,4 +1,6 @@
-class User
+require "active_record"
+
+class User < ActiveRecord::Base
   def initialize(db_connection)
     @database_connection = db_connection
   end

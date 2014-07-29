@@ -1,4 +1,6 @@
-class Distribution
+require "active_record"
+
+class Distribution < ActiveRecord::Base
   def initialize(db_connection)
     @database_connection = db_connection
   end

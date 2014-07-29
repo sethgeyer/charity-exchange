@@ -7,6 +7,7 @@ require_relative "lib/account"
 require_relative "lib/deposit"
 require_relative "lib/distribution"
 require_relative "lib/proposed_wager"
+require_relative "lib/connection"
 require "rack-flash"
 require "gschool_database_connection"
 
