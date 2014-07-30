@@ -2,6 +2,8 @@ require "active_record"
 
 class Account < ActiveRecord::Base
   belongs_to :user
+  has_many :deposits
+  has_many :distributions
   # def initialize(db_connection)
   #   @database_connection = db_connection
   # end

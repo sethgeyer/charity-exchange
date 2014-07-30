@@ -6,9 +6,9 @@
     <th>Charity</th>
     </thead>
     <tbody>
-    <%distributions_array.each do |distribution|%>
+    <%distributions.each do |distribution|%>
       <tr>
-        <td>$<%=distribution.amount.to_i / 100%></td>
+        <td>$<%=distribution.amount / 100%></td>
         <td><%=distribution.charity%></td>
       </tr>
     <%end%>
