@@ -36,9 +36,9 @@
   <tbody>
   <%proposed_wagers.each do |wager_hash|%>
     <tr>
-      <td><%=wager_hash["title"]%></td>
-      <td><%=wager_hash["amount"].to_i / 100 %></td>
-      <td><%=wager_hash["wageree_id"]%></td>
+      <td><%=wager_hash.title%></td>
+      <td><%=wager_hash.amount.to_i / 100 %></td>
+      <td><%=wager_hash.wageree_id%></td>
     </tr>
   </tbody>
   <%end%>

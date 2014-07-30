@@ -8,8 +8,8 @@
     <tbody>
     <%distributions_array.each do |distribution|%>
       <tr>
-        <td>$<%=distribution["amount"].to_i / 100%></td>
-        <td><%=distribution["charity"]%></td>
+        <td>$<%=distribution.amount.to_i / 100%></td>
+        <td><%=distribution.charity%></td>
       </tr>
     <%end%>
     </tbody>

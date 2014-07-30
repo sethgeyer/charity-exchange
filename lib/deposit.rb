@@ -1,9 +1,9 @@
 require "active_record"
 
 class Deposit < ActiveRecord::Base
-  def initialize(db_connection)
-    @database_connection = db_connection
-  end
+  # def initialize(db_connection)
+  #   @database_connection = db_connection
+  # end
 
   def create_in_dbase(id, amount, cc_number, exp_date, name_on_card, cc_type)
     @database_connection.sql("INSERT INTO deposits (account_id, amount, cc_number, exp_date, name_on_card, cc_type) VALUES (#{id}, #{amount.to_i * 100}, #{cc_number}, '#{exp_date}', '#{name_on_card}', '#{cc_type}')")

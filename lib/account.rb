@@ -1,9 +1,10 @@
 require "active_record"
 
 class Account < ActiveRecord::Base
-  def initialize(db_connection)
-    @database_connection = db_connection
-  end
+  belongs_to :user
+  # def initialize(db_connection)
+  #   @database_connection = db_connection
+  # end
 
   def create_in_dbase(id)
     @database_connection.sql("INSERT INTO accounts (amount, user_id) VALUES (0, #{id})")

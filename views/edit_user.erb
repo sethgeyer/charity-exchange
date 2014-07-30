@@ -4,15 +4,15 @@
   <input type="hidden" name="_method" value="PATCH"/>
   <label for="email">Email:</label>
   <br/>
-  <input type="email" id="email" readonly name="email" value="<%=current_user["email"]%>"/>
+  <input type="email" id="email" readonly name="email" value="<%=current_user.email%>"/>
   <br/>
   <label for="password">Password:</label>
   <br/>
-  <input type="password" id="password" name="password" value="<%=current_user["password"]%>"/>
+  <input type="password" id="password" name="password" value="<%=current_user.password%>"/>
   <br/>
   <label for="profile_picture">Profile Picture:</label>
   <br/>
-  <input id="profile_picture" name="profile_picture" value="<%=current_user["profile_picture"]%>"/>
+  <input id="profile_picture" name="profile_picture" value="<%=current_user.profile_picture%>"/>
   <br/>
   <button>Submit</button>
   <a href="/users/<%=session[:user_id]%>">Cancel</a>

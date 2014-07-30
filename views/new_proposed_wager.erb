@@ -12,7 +12,8 @@
     <label for="wageree_dd">Wageree</label>
     <select id="wageree_dd" name="wageree_dd">
       <%@list_of_users.each do |user_hash| %>
-        <option value=<%user_hash["id"]%>><%=user_hash["email"]%></option>
+
+        <option value=<%=user_hash.id%>><%=user_hash.email%></option>
       <%end%>
     </select>
     <button>Submit</button>

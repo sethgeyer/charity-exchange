@@ -1,9 +1,10 @@
 require "active_record"
 
 class User < ActiveRecord::Base
-  def initialize(db_connection)
-    @database_connection = db_connection
-  end
+  has_one :account
+  # def initialize(db_connection)
+  #   @database_connection = db_connection
+  # end
 
   def create_new_user_in_dbase(email, password, profile_picture)
     @database_connection.sql("INSERT INTO users (email, password, profile_picture) VALUES ('#{email}', '#{password}', '#{profile_picture}')")

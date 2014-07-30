@@ -15,6 +15,10 @@ RSpec.configure do |config|
     database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
 
     database_connection.sql("ROLLBACK")
+    tables = ['accounts', 'charities', 'deposits', 'distributions', 'mvps', 'proposed_wagers', 'users']
+
+    tables.each { |table| database_connection.sql("DELETE FROM #{table} WHERE ID > 0 ") }
+
   end
 end
 

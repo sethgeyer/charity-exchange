@@ -1,9 +1,9 @@
 require "active_record"
 
 class Distribution < ActiveRecord::Base
-  def initialize(db_connection)
-    @database_connection = db_connection
-  end
+  # def initialize(db_connection)
+  #   @database_connection = db_connection
+  # end
 
   def create_in_dbase(id, amount, charity)
     @database_connection.sql("INSERT INTO distributions (account_id, amount, charity) VALUES (#{id}, #{amount.to_i * 100}, '#{charity}')")

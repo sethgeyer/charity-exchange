@@ -2,11 +2,11 @@
 <a href="/">Back to Home</a>
 
 <%if current_user%>
-  <%if current_user["is_admin"] == "t"%>
+  <%if current_user.is_admin == "t"%>
     | <a href="/mvps/new">Add New</a>
   <%end%>
 <%end%>
 <br/>
 <%mvps.each do |mvp|%>
-<%=mvp["date"]%> - <%=mvp["description"]%><br/>
+<%=mvp.date%> - <%=mvp.description%><br/>
 <%end%>

@@ -16,11 +16,11 @@
   <tbody>
     <%charities.each do |charity| %>
     <tr>
-      <td><%=charity["name"]%></td>
-      <td><%=charity["tax_id"]%></td>
-      <td><%=charity["poc"]%></td>
-      <td><%=charity["poc_email"]%></td>
-      <td><%=charity["status"]%></td>
+      <td><%=charity.name%></td>
+      <td><%=charity.tax_id%></td>
+      <td><%=charity.poc%></td>
+      <td><%=charity.poc_email%></td>
+      <td><%=charity.status%></td>
     </tr>
   <%end%>
   </tbody>

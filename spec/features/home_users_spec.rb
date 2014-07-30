@@ -2,6 +2,7 @@ feature "visitor visits homepage" do
   before(:each) do
     visit "/"
   end
+
   scenario "visitor peruses the homepage" do
     expect(page).to have_button("Login")
     expect(page).to have_link("Sign Up")
@@ -25,6 +26,7 @@ feature "visitor visits homepage" do
   scenario "logged in user wants to see their account details" do
     fill_in_registration_form("Seth")
     click_on "Account Details"
+
     expect(page).to have_css("#show_users")
   end
 
@@ -45,7 +47,7 @@ feature "visitor registration" do
   scenario "visitor fills in registration form completely and accurately" do
     fill_in_registration_form("Seth")
       expect(page).to have_content("Thanks for registering Seth.  You are now logged in.")
-      expect(page).to have_button("Logout")
+    expect(page).to have_button("Logout")
       expect(page).not_to have_button("Login")
       expect(page).not_to have_link("Sign Up")
       expect(page).to have_link("Edit Profile")
