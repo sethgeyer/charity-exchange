@@ -13,6 +13,7 @@ require "gschool_database_connection"
 
 class App < Sinatra::Application
 
+  ### Did this to address the return the connections to the connection pool
   after do
     ActiveRecord::Base.connection.close
   end
