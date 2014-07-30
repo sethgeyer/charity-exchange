@@ -7,7 +7,7 @@ require_relative "lib/account"
 require_relative "lib/deposit"
 require_relative "lib/distribution"
 require_relative "lib/proposed_wager"
-# require_relative "lib/connection"
+require_relative "lib/connection"
 require "rack-flash"
 require "gschool_database_connection"
 
@@ -203,11 +203,12 @@ class App < Sinatra::Application
   get "/users/:id" do
     if session[:user_id] == params[:id].to_i
       account = Account.find_by(user_id: session[:user_id])
-      deposit_total = Deposit.where(account_id: account.id).sum(:amount)
-      distribution_total = Distribution.where(account_id: account.id).sum(:amount)
-      net_amount = deposit_total - distribution_total
-      proposed_wagers = ProposedWager.where(account_id: account.id)
-      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, net_amount: net_amount, proposed_wagers: proposed_wagers}
+      deposit_total = account.deposits.sum(:amount) / 100
+      distribution_total = account.distributions.sum(:amount) / 100
+      wagered_total = account.proposed_wagers.sum(:amount) / 100
+      net_amount = deposit_total - distribution_total - wagered_total
+      proposed_wagers = account.proposed_wagers
+      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, wagered_total: wagered_total, net_amount: net_amount, proposed_wagers: proposed_wagers}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"

@@ -219,6 +219,7 @@ feature "Add Funds to Account" do
       expect(page).to have_css("#show_users")
       expect(page).to have_content("Thank you for depositing $400 into your account")
       expect(page.find("#deposits")).to have_content("$400")
+    expect(page.find("#deposits")).not_to have_content("$40000")
       expect(page.find("#net_amount")).to have_content("$400")
     fund_my_account_with_a_credit_card(500)
       expect(page).to have_content("Thank you for depositing $500 into your account")
@@ -298,6 +299,7 @@ feature "Distribute Funds from the Account" do
       expect(page).to have_content("Thank you for distributing $100 from your account to United Way")
       expect(page.find("#deposits")).to have_content("$400")
       expect(page.find("#distributions")).to have_content("$100")
+    expect(page.find("#distributions")).not_to have_content("$10000")
       expect(page.find("#net_amount")).to have_content("$300")
     distribute_funds_from_my_account(50, 'Red Cross')
       expect(page).to have_content("Thank you for distributing $50 from your account to Red Cross")
@@ -325,13 +327,15 @@ feature "Create a Proposed Wager" do
     fill_in "Title", with: "Ping Pong Match between Seth and Alex"
     fill_in "Date of Wager", with: "2014-07-31"
     fill_in "Details", with: "Game to 21, standard rules apply"
-    fill_in "Amount", with: 200
+    fill_in "Amount", with: 100
     select "Alex", from: "Wageree"
     click_on "Submit"
       # expect(page).to have_content("You're proposed wager has been sent to Alex")
       expect(page.find("#proposed_wagers_table")).to have_content("Ping Pong Match")
-      expect(page.find("#proposed_wagers_table")).to have_content(200)
-      expect(page.find("#proposed_wagers_table")).not_to have_content(20000)
+      expect(page.find("#proposed_wagers_table")).to have_content(100)
+      expect(page.find("#proposed_wagers_table")).not_to have_content(10000)
+      expect(page.find("#wagers")).to have_content(100)
+      expect(page.find("#net_amount")).to have_content(300)
   end
 end
 

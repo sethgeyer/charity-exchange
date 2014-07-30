@@ -85,7 +85,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord
+  activerecord (~> 4.1.4)
   capybara
   gschool_database_connection (~> 1.0.0)
   launchy
