@@ -12,6 +12,11 @@ require "rack-flash"
 require "gschool_database_connection"
 
 class App < Sinatra::Application
+
+  after do
+    ActiveRecord::Base.connection.close
+  end
+
   enable :sessions
   use Rack::Flash
 
