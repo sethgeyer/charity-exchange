@@ -7,22 +7,23 @@ require_relative "lib/account"
 require_relative "lib/deposit"
 require_relative "lib/distribution"
 require_relative "lib/proposed_wager"
-require_relative "lib/connection"
+# require_relative "lib/connection"
 require "rack-flash"
 require "gschool_database_connection"
 
 class App < Sinatra::Application
 
   ### Did this to address the return the connections to the connection pool
-  after do
-    ActiveRecord::Base.connection.close
-  end
+  # after do
+  #   ActiveRecord::Base.connection.close
+  # end
 
   enable :sessions
   use Rack::Flash
 
   def initialize
     super
+    @database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
   end
 
   get "/" do
@@ -214,7 +215,8 @@ class App < Sinatra::Application
       wagered_total = account.proposed_wagers.sum(:amount) / 100
       net_amount = deposit_total - distribution_total - wagered_total
       proposed_wagers = account.proposed_wagers
-      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, wagered_total: wagered_total, net_amount: net_amount, proposed_wagers: proposed_wagers}
+      wageree_wagers = ProposedWager.where(wageree_id: session[:user_id])
+      erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, wagered_total: wagered_total, net_amount: net_amount, proposed_wagers: proposed_wagers, wageree_wagers: wageree_wagers}
     else
       flash[:notice] = "You are not authorized to visit this page"
       redirect "/"

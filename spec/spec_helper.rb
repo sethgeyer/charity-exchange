@@ -1,27 +1,56 @@
+# require_relative "./../app"
+# require "capybara/rspec"
+# ENV["RACK_ENV"] = "test"
+#
+# Capybara.app = App
+#
+# RSpec.configure do |config|
+#   config.before do
+#     database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+#
+#     database_connection.sql("BEGIN")
+#   end
+#
+#   config.after do
+#     database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+#
+#     database_connection.sql("ROLLBACK")
+#
+#     ### Added the below code to empty out the various table after each test is run. The rollback call above was not working.
+#     tables = ['accounts', 'charities', 'deposits', 'distributions', 'mvps', 'proposed_wagers', 'users']
+#     tables.each { |table| database_connection.sql("DELETE FROM #{table} WHERE ID > 0 ") }
+#
+#   end
+# end
+
 require_relative "./../app"
 require "capybara/rspec"
+require "database_cleaner"
 ENV["RACK_ENV"] = "test"
 
 Capybara.app = App
 
 RSpec.configure do |config|
-  config.before do
-    database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
 
-    database_connection.sql("BEGIN")
+  config.before(:suite) do
+    GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+    DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.after do
-    database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+  config.before(:each) do
+    DatabaseCleaner.strategy = :truncation
+  end
 
-    database_connection.sql("ROLLBACK")
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
 
-    ### Added the below code to empty out the various table after each test is run. The rollback call above was not working.
-    tables = ['accounts', 'charities', 'deposits', 'distributions', 'mvps', 'proposed_wagers', 'users']
-    tables.each { |table| database_connection.sql("DELETE FROM #{table} WHERE ID > 0 ") }
-
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 end
+
+
 
 def fill_in_registration_form(name)
   visit "/users/new"
@@ -62,4 +91,19 @@ def distribute_funds_from_my_account(distribution_amount, charity)
   fill_in "Amount", with: distribution_amount
   select charity, from: "charity_dd"
   click_on "Submit"
+end
+
+def register_and_create_a_wager
+  fill_in_registration_form("Alex")
+  click_on "Logout"
+  fill_in_registration_form("Seth")
+  fund_my_account_with_a_credit_card(400)
+  visit "/proposed_wagers/new"
+  fill_in "Title", with: "Ping Pong Match between S & A"
+  fill_in "Date of Wager", with: "2014-07-31"
+  fill_in "Details", with: "Game to 21, standard rules apply"
+  fill_in "Amount", with: 100
+  select "Alex", from: "Wageree"
+  click_on "Submit"
+
 end

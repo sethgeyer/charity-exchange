@@ -31,20 +31,28 @@
 
 <table id="proposed_wagers_table">
   <thead>
-  <th>Title</th>
-  <th>Amount</th>
-  <th>Wageree</th>
+    <th>Title</th>
+    <th>Amount</th>
+    <th>Wageree</th>
   </thead>
   <tbody>
-  <%proposed_wagers.each do |wager|%>
-    <tr>
-      <td><%=wager.title%></td>
-      <td><%=wager.amount / 100 %></td>
-      <td><%=wager.wageree_id%></td>
-    </tr>
+    <%proposed_wagers.each do |wager|%>
+      <tr>
+        <td><%=wager.title%></td>
+        <td><%=wager.amount / 100 %></td>
+        <td><%=wager.wageree_id%></td>
+      </tr>
+
+    <%end%>
+    <%wageree_wagers.each do |wager|%>
+      <tr>
+        <td><%=wager.title%></td>
+        <td><%=wager.amount / 100%></td>
+        <td><%=Account.find_by(user_id: wager.wageree_id).user.email%></td>
+      </tr>
+    <%end%>
   </tbody>
-  <%end%>
-    </table>
+</table>
 
 
 
