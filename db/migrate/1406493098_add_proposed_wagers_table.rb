@@ -1,7 +1,7 @@
 class AddProposedWagersTable < ActiveRecord::Migration
   def up
     create_table :proposed_wagers do |t|
-      t.integer :user_id
+      t.integer :account_id
       t.string  :title
       t.date    :date_of_wager
       t.string  :details

@@ -32,7 +32,8 @@ class App < Sinatra::Application
   end
 
   post "/proposed_wagers" do
-    ProposedWager.create(user_id: session[:user_id], title: params[:title], date_of_wager: params[:date_of_wager], details: params[:details], amount: params[:amount].to_i * 100, wageree_id: params[:wageree_dd].to_i)
+    account = Account.find_by(user_id: session[:user_id])
+    ProposedWager.create(account_id: account.id, title: params[:title], date_of_wager: params[:date_of_wager], details: params[:details], amount: params[:amount].to_i * 100, wageree_id: params[:wageree_dd].to_i)
     wageree = User.find(params[:wageree_dd].to_i)
     flash[:notice] = "You're proposed wager has been sent"#" to #{wageree["email"]}"
     redirect "/users/#{session[:user_id]}"
@@ -205,7 +206,7 @@ class App < Sinatra::Application
       deposit_total = Deposit.where(account_id: account.id).sum(:amount)
       distribution_total = Distribution.where(account_id: account.id).sum(:amount)
       net_amount = deposit_total - distribution_total
-      proposed_wagers = ProposedWager.where(user_id: session[:user_id])
+      proposed_wagers = ProposedWager.where(account_id: account.id)
       erb :show_user, locals: {account: account, deposit_total: deposit_total, distribution_total: distribution_total, net_amount: net_amount, proposed_wagers: proposed_wagers}
     else
       flash[:notice] = "You are not authorized to visit this page"
