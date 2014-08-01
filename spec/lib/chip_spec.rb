@@ -70,7 +70,7 @@ describe Chip do
     before(:each) do
       @chip.purchase(@user.id, @account.id, 20000, "2014-07-12", "available" )
       @chip.purchase(@user.id, @account.id, 1000, "2014-07-12", "wagered" )
-    g  @chip.purchase(@user.id, @account.id, 5000, "2014-07-12", "distributed" )
+      @chip.purchase(@user.id, @account.id, 5000, "2014-07-12", "distributed" )
     end
 
     it "returns a all chips that have not been distributed or wagered" do

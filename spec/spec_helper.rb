@@ -54,6 +54,7 @@ end
 
 def fill_in_registration_form(name)
   visit "/users/new"
+
   fill_in "Email", with: name
   fill_in "Password", with: name.downcase
   fill_in "Confirm", with: name.downcase
