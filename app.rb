@@ -18,9 +18,9 @@ class App < Sinatra::Application
   CHIP_VALUE = 10
 
   ### Did this to address the return the connections to the connection pool
-  # after do
-  #   ActiveRecord::Base.connection.close
-  # end
+  after do
+    ActiveRecord::Base.connection.close
+  end
 
   enable :sessions
   use Rack::Flash
@@ -171,7 +171,8 @@ class App < Sinatra::Application
 
   #NEW - USER
   get "/users/new" do
-    erb :new_user, layout: false
+    user = User.new
+    erb :new_user, layout: false, locals: {user: user}
   end
 
   #CREATE - USER
@@ -182,14 +183,16 @@ class App < Sinatra::Application
     user.email = params[:email]
     user.password = params[:password]
     user.profile_picture = params[:profile_picture]
-    user.save!
-    current_user = User.find_by(email: params[:email])
-    set_the_session(current_user)
-    account = Account.new
-    account.user_id = session[:user_id]
-    account.save!
-    flash[:notice] = "Thanks for registering #{session[:username]}. You are now logged in."
-    redirect "/users/#{session[:user_id]}"
+    if user.save
+      set_the_session(User.find_by(username: params[:username]))
+      account = Account.new
+      account.user_id = session[:user_id]
+      account.save!
+      flash[:notice] = "Thanks for registering #{session[:username]}. You are now logged in."
+      redirect "/users/#{session[:user_id]}"
+    else
+      erb :new_user, locals: {user: user}
+    end
   end
 
   #EDIT - USER

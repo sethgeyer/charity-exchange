@@ -1,20 +1,26 @@
 <div id="new_users">
 <h1>Register Here</h1>
 
+<ul>
+  <%user.errors.full_messages.each do |message|%>
+   <li style="color:red"><%=message%></li>
+  <%end%>
+</ul>
+
 <form method="POST" action="/users">
 
   <label for="username">Username:</label>
   <br/>
-  <input id="username" name="username"/>
+  <input id="username" name="username" value="<%=user.username%>"/>
   <br/>
   <label for="ssn">SSN:</label>
   <br/>
-  <input id="ssn" name="ssn"/>
+  <input id="ssn" name="ssn" value="<%=user.ssn%>"/>
   <br/>
   
   <label for="email">Email:</label>
   <br/>
-  <input type="email" id="email" name="email"/>
+  <input type="email" id="email" name="email" value="<%=user.email%>"/>
   <br/>
   <label for="password">Password:</label>
   <br/>
@@ -26,7 +32,7 @@
   <br/>
   <label for="profile_picture">Profile Picture:</label>
   <br/>
-  <input id="profile_picture" name="profile_picture"/>
+  <input id="profile_picture" name="profile_picture" value="<%=user.profile_picture%>"/>
   <br/><br>
   <button>Submit</button>
   <a href="/">Cancel</a>

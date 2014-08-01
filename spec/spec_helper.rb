@@ -53,14 +53,16 @@ end
 
 
 def fill_in_registration_form(name)
+  ssn = rand(100000000..199999999)
   visit "/users/new"
   fill_in "Username", with: "#{name.downcase}y"
-  fill_in "SSN", with: "377993333"
+  fill_in "SSN", with: ssn
   fill_in "Email", with: name
   fill_in "Password", with: name.downcase
   fill_in "Confirm", with: name.downcase
   fill_in "Profile Picture", with: "http://google.com"
   click_on "Submit"
+
 end
 
 
@@ -81,9 +83,9 @@ end
 def fund_my_account_with_a_credit_card(deposit_amount)
   click_on "Fund My Account"
   fill_in "Amount", with: deposit_amount
-  fill_in "Credit Card Number", with: "123456789"
+  fill_in "Credit Card Number", with: 123456789
   fill_in "Exp Date", with: "2014-07-31"
-  fill_in "Name on Card", with: "Seth Geyer"
+  fill_in "Name on Card", with: "Stephen Geyer"
   within(page.find("#new_deposits")) { choose "Visa" }
   click_on "Submit"
 end
@@ -96,16 +98,16 @@ def distribute_funds_from_my_account(distribution_amount, charity)
 end
 
 def register_and_create_a_wager
-  fill_in_registration_form("Alex")
+  fill_in_registration_form("Alexander")
   click_on "Logout"
-  fill_in_registration_form("Seth")
+  fill_in_registration_form("Stephen")
   fund_my_account_with_a_credit_card(400)
   visit "/proposed_wagers/new"
   fill_in "Title", with: "Ping Pong Match between S & A"
   fill_in "Date of Wager", with: "2014-07-31"
   fill_in "Details", with: "Game to 21, standard rules apply"
   fill_in "Amount", with: 100
-  select "Alex", from: "Wageree"
+  select "Alexander", from: "Wageree"
   click_on "Submit"
 
 end

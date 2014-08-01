@@ -13,7 +13,7 @@ feature "visitor visits homepage" do
   end
 
   scenario "non-registered visitor tries to login or visitor logs in w/ incorrect credentials" do
-    fill_in "Username", with: "sethy"
+    fill_in "Username", with: "stepheny"
     fill_in "Password", with: "123"
     click_on "Login"
       expect(page).to have_button("Login")
@@ -24,7 +24,7 @@ feature "visitor visits homepage" do
   end
 
   scenario "logged in user wants to see their account details" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Account Details"
 
     expect(page).to have_css("#show_users")
@@ -45,8 +45,8 @@ end
 
 feature "visitor registration" do
   scenario "visitor fills in registration form completely and accurately" do
-    fill_in_registration_form("Seth")
-      expect(page).to have_content("Thanks for registering sethy.  You are now logged in.")
+    fill_in_registration_form("Stephen")
+    expect(page).to have_content("Thanks for registering stepheny.  You are now logged in.")
     expect(page).to have_button("Logout")
       expect(page).not_to have_button("Login")
       expect(page).not_to have_link("Sign Up")
@@ -55,29 +55,45 @@ feature "visitor registration" do
   end
 
   scenario "registered visitor completes login form correctly and routes to show page for the user" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Logout"
-    login_a_registered_user("Seth")
-      expect(page).to have_content("Welcome sethy")
+    login_a_registered_user("Stephen")
+      expect(page).to have_content("Welcome stepheny")
       expect(page).to have_button("Logout")
       expect(page).not_to have_button("Login")
       expect(page).not_to have_link("Sign Up")
       expect(page).to have_link("Edit Profile")
       expect(page).to have_link("Charities")
       expect(page).to have_css("#show_users")
-
   end
-
-
 
   scenario "visitor fills in registration form only partially" do
-    skip
+    name = "Stephen"
+    visit "/users/new"
+    # fill_in "Username", with: "#{name.downcase}y"
+    fill_in "SSN", with: "377993333"
+    fill_in "Email", with: name
+    fill_in "Password", with: name.downcase
+    fill_in "Confirm", with: name.downcase
+    click_on "Submit"
+    expect(page).to have_css("#new_users")
+    expect(page).to have_content("Username can't be blank")
   end
-  scenario "visitor uses an already used email during registration" do
-    skip
-  end
-  scenario "logged in user tries to register via the register url" do
-    skip
+
+  scenario "visitor fills in registration form using a non-unique username" do
+    fill_in_registration_form("Stephen")
+    click_on "Logout"
+    name = "Stephen"
+    visit "/users/new"
+    fill_in "Username", with: "#{name.downcase}y"
+    fill_in "SSN", with: "377993333"
+    fill_in "Email", with: name
+    fill_in "Password", with: name.downcase
+    fill_in "Confirm", with: name.downcase
+    fill_in "Profile Picture", with: "http://google.com"
+    click_on "Submit"
+    expect(page).to have_css("#new_users")
+    expect(page).to have_content("Username is not unique.  Please select another.")
   end
 
 end
@@ -85,18 +101,18 @@ end
 
 feature "editing user profile" do
   scenario "registered user updates their user profile" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Logout"
-    login_a_registered_user("Seth")
+    login_a_registered_user("Stephen")
     click_on "Edit Profile"
-    fill_in "Password", with: "sethy"
+    fill_in "Password", with: "stepheny"
     fill_in "Profile Picture", with: "www.google.com"
     click_on "Submit"
       expect(page).to have_content("Your changes have been saved")
       expect(page).to have_css("#show_users")
     click_on "Edit Profile"
       expect(find("#profile_picture").value).to eq("www.google.com")
-      expect(find("#password").value).to eq("sethy")
+      expect(find("#password").value).to eq("stepheny")
   end
 
   scenario "anyone besides the registered user can not change the individual's profile via the direct url" do
@@ -106,9 +122,9 @@ feature "editing user profile" do
   end
 
   scenario "registered user decides to cancel their edits" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Logout"
-    login_a_registered_user("Seth")
+    login_a_registered_user("Stephen")
     click_on "Edit Profile"
     click_on "Cancel"
       expect(page).to have_css("#show_users")
@@ -169,20 +185,20 @@ end
 feature "User Show Page" do
 
   scenario "As a logged in user I can view my account details page" do
-    fill_in_registration_form("Seth")
-      expect(page).to have_css("#deposits")
+    fill_in_registration_form("Stephen")
+    expect(page).to have_css("#deposits")
       expect(page).to have_css("#distributions")
       expect(page).to have_css("#net_amount")
   end
 
   scenario "As a logged_in user I can link to the new deposits page to fund my account" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Fund My Account"
       expect(page).to have_css("#new_deposits")
   end
 
   scenario "As a logged_in user I can link to the 'create a wager' page to create a wager" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Create a Wager"
     expect(page).to have_css("#new_proposed_wagers")
   end
@@ -191,7 +207,7 @@ feature "User Show Page" do
 
 
   scenario "As a logged_in user I can link to the new distributions page to distribute funds from my account" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     click_on "Distribute Funds"
       expect(page).to have_css("#new_distributions")
   end
@@ -214,7 +230,7 @@ feature "Add Funds to Account" do
 
 
   scenario "As a user I can add funds to my account" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     fund_my_account_with_a_credit_card(400)
       expect(page).to have_css("#show_users")
       expect(page).to have_content("Thank you for depositing $400 into your account")
@@ -231,7 +247,7 @@ end
 
 feature "View History of Deposit" do
   scenario "As a user, I should be able to view my history of deposits" do
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     fund_my_account_with_a_credit_card(400)
     fund_my_account_with_a_credit_card(500)
     click_on "Show Deposit History"
@@ -256,7 +272,7 @@ feature "View History of Distribution" do
     complete_application("United Way")
     visit "/charities/new"
     complete_application("Red Cross")
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     fund_my_account_with_a_credit_card(400)
     fund_my_account_with_a_credit_card(500)
     distribute_funds_from_my_account(100, "United Way")
@@ -292,7 +308,7 @@ feature "Distribute Funds from the Account" do
     complete_application("United Way")
     visit "/charities/new"
     complete_application("Red Cross")
-    fill_in_registration_form("Seth")
+    fill_in_registration_form("Stephen")
     fund_my_account_with_a_credit_card(400)
     distribute_funds_from_my_account(100, "United Way")
       expect(page).to have_css("#show_users")
@@ -331,11 +347,11 @@ feature "Create a Proposed Wager" do
   scenario "As a user I can see a proposed wager in which I'm the wageree" do
     register_and_create_a_wager
     click_on "Logout"
-    login_a_registered_user("Alex")
+    login_a_registered_user("Alexander")
     expect(page.find("#proposed_wagers_table")).to have_content("Ping Pong Match")
     expect(page.find("#proposed_wagers_table")).to have_content(100)
     expect(page.find("#proposed_wagers_table")).not_to have_content(10000)
-    expect(page.find("#proposed_wagers_table")).to have_content("Alex")
+    expect(page.find("#proposed_wagers_table")).to have_content("Alexander")
 
   end
 
