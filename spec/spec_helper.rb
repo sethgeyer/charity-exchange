@@ -54,7 +54,8 @@ end
 
 def fill_in_registration_form(name)
   visit "/users/new"
-
+  fill_in "Username", with: "#{name.downcase}y"
+  fill_in "SSN", with: "377993333"
   fill_in "Email", with: name
   fill_in "Password", with: name.downcase
   fill_in "Confirm", with: name.downcase
@@ -64,7 +65,7 @@ end
 
 
 def login_a_registered_user(name)
-  fill_in "Email", with: name
+  fill_in "username", with: "#{name.downcase}y"
   fill_in "Password", with: name.downcase
   click_on "Login"
 end

@@ -13,7 +13,7 @@ feature "visitor visits homepage" do
   end
 
   scenario "non-registered visitor tries to login or visitor logs in w/ incorrect credentials" do
-    fill_in "Email", with: "Seth"
+    fill_in "Username", with: "sethy"
     fill_in "Password", with: "123"
     click_on "Login"
       expect(page).to have_button("Login")
@@ -46,7 +46,7 @@ end
 feature "visitor registration" do
   scenario "visitor fills in registration form completely and accurately" do
     fill_in_registration_form("Seth")
-      expect(page).to have_content("Thanks for registering Seth.  You are now logged in.")
+      expect(page).to have_content("Thanks for registering sethy.  You are now logged in.")
     expect(page).to have_button("Logout")
       expect(page).not_to have_button("Login")
       expect(page).not_to have_link("Sign Up")
@@ -58,7 +58,7 @@ feature "visitor registration" do
     fill_in_registration_form("Seth")
     click_on "Logout"
     login_a_registered_user("Seth")
-      expect(page).to have_content("Welcome Seth")
+      expect(page).to have_content("Welcome sethy")
       expect(page).to have_button("Logout")
       expect(page).not_to have_button("Login")
       expect(page).not_to have_link("Sign Up")

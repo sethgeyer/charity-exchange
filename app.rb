@@ -149,10 +149,10 @@ class App < Sinatra::Application
 
   #LOGIN
   post "/login" do
-    current_user = User.find_by(email: params[:email], password: params[:password])
+    current_user = User.find_by(username: params[:username], password: params[:password])
     if current_user != nil
       set_the_session(current_user)
-      flash[:notice] = "Welcome #{session[:email]}"
+      flash[:notice] = "Welcome #{session[:username]}"
       redirect "/users/#{session[:user_id]}"
     else
       flash[:notice] = "The credentials you entered are incorrect.  Please try again."
@@ -177,6 +177,8 @@ class App < Sinatra::Application
   #CREATE - USER
   post "/users" do
     user = User.new
+    user.username = params[:username]
+    user.ssn = params[:ssn].to_i
     user.email = params[:email]
     user.password = params[:password]
     user.profile_picture = params[:profile_picture]
@@ -186,7 +188,7 @@ class App < Sinatra::Application
     account = Account.new
     account.user_id = session[:user_id]
     account.save!
-    flash[:notice] = "Thanks for registering #{session[:email]}. You are now logged in."
+    flash[:notice] = "Thanks for registering #{session[:username]}. You are now logged in."
     redirect "/users/#{session[:user_id]}"
   end
 
@@ -232,7 +234,7 @@ class App < Sinatra::Application
 
   def set_the_session(current_user)
     session[:user_id] = current_user.id
-    session[:email] = current_user.email
+    session[:username] = current_user.username
   end
 
   def render_page_or_redirect_to_homepage(session_id, name_of_erb_template)
