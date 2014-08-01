@@ -9,7 +9,7 @@
     <%distributions.each do |distribution|%>
       <tr>
         <td>$<%=distribution.amount / 100%></td>
-        <td><%=distribution.charity%></td>
+        <td><%=distribution.charity.name%></td>
       </tr>
     <%end%>
     </tbody>

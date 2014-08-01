@@ -7,7 +7,7 @@
     <label for="charity_dd">Select a Charity</label><br/>
     <select id="charity_dd" name="charity_dd">
       <%@charities_for_selection.each do |charity_hash|%>
-        <option value="<%=charity_hash.name%>"><%=charity_hash.name%></option>
+        <option value="<%=charity_hash.id%>"><%=charity_hash.name%></option>
       <%end%>
     </select>
     <br/>

@@ -7,11 +7,15 @@ require_relative "lib/account"
 require_relative "lib/deposit"
 require_relative "lib/distribution"
 require_relative "lib/proposed_wager"
+require_relative "lib/chip"
 # require_relative "lib/connection"
 require "rack-flash"
 require "gschool_database_connection"
 
+
+
 class App < Sinatra::Application
+  CHIP_VALUE = 10
 
   ### Did this to address the return the connections to the connection pool
   # after do
@@ -24,6 +28,7 @@ class App < Sinatra::Application
   def initialize
     super
     @database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+
   end
 
   get "/" do
@@ -56,9 +61,9 @@ class App < Sinatra::Application
 
   #CREATE - DISTRIBUTIONS
   post "/distributions" do
-    Distribution.create(account_id: params[:account_id].to_i, amount: params[:amount].to_i * 100, charity: params[:charity_dd])
+    Distribution.create(account_id: params[:account_id].to_i, amount: params[:amount].to_i * 100, charity_id: params[:charity_dd])
     newest_distribution = Distribution.where(account_id: params[:account_id].to_i).last
-    flash[:notice] = "Thank you for distributing $#{newest_distribution.amount.to_i / 100} from your account to #{newest_distribution.charity}"
+    flash[:notice] = "Thank you for distributing $#{newest_distribution.amount.to_i / 100} from your account to #{newest_distribution.charity.name}"
     redirect "/users/#{session[:user_id]}"
   end
 

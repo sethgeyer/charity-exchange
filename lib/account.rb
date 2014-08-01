@@ -1,4 +1,4 @@
-require "active_record"
+# require "active_record"
 
 class Account < ActiveRecord::Base
   belongs_to :user
